@@ -1,0 +1,31 @@
+name: Deploy Github Pages
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  NODE_VERSION: '8.12.0'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Use Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - uses: actions/checkout@v1
+      - name: Yarn Install
+        run: |
+          npm install -g yarn
+          yarn install
+          yarn build
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: build
