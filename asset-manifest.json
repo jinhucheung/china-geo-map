@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/jinhucheung/china-geo-map/static/css/main.65b7c0ac.chunk.css",
+    "main.js": "/jinhucheung/china-geo-map/static/js/main.2bbb24ea.chunk.js",
+    "main.js.map": "/jinhucheung/china-geo-map/static/js/main.2bbb24ea.chunk.js.map",
+    "runtime-main.js": "/jinhucheung/china-geo-map/static/js/runtime-main.aaad9f28.js",
+    "runtime-main.js.map": "/jinhucheung/china-geo-map/static/js/runtime-main.aaad9f28.js.map",
+    "static/js/2.07809eeb.chunk.js": "/jinhucheung/china-geo-map/static/js/2.07809eeb.chunk.js",
+    "static/js/2.07809eeb.chunk.js.map": "/jinhucheung/china-geo-map/static/js/2.07809eeb.chunk.js.map",
+    "index.html": "/jinhucheung/china-geo-map/index.html",
+    "precache-manifest.d97e6f044bb2c672afce5c4229283176.js": "/jinhucheung/china-geo-map/precache-manifest.d97e6f044bb2c672afce5c4229283176.js",
+    "service-worker.js": "/jinhucheung/china-geo-map/service-worker.js",
+    "static/css/main.65b7c0ac.chunk.css.map": "/jinhucheung/china-geo-map/static/css/main.65b7c0ac.chunk.css.map",
+    "static/js/2.07809eeb.chunk.js.LICENSE.txt": "/jinhucheung/china-geo-map/static/js/2.07809eeb.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.aaad9f28.js",
+    "static/js/2.07809eeb.chunk.js",
+    "static/css/main.65b7c0ac.chunk.css",
+    "static/js/main.2bbb24ea.chunk.js"
+  ]
+}
