@@ -10,6 +10,7 @@ export function setDocTitle({area, title = settings.site_title} : {area?: Area, 
   const cloned_area_names = clone()(parsed_area.area_names)
 
   cloned_area_names.shift()
+  cloned_area_names.reverse()
   cloned_area_names.push(title)
   document.title = cloned_area_names.join(' - ')
 }
