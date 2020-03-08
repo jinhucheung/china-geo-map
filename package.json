@@ -6,10 +6,12 @@
   "license": "MIT",
   "author": "jimcheung",
   "dependencies": {
+    "@types/rfdc": "^1.1.0",
     "echarts": "^4.6.0",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
-    "react-scripts": "3.4.0"
+    "react-scripts": "3.4.0",
+    "rfdc": "^1.1.4"
   },
   "scripts": {
     "start": "react-scripts start",

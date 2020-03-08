@@ -1,7 +1,9 @@
 import React from 'react'
-import echarts from 'echarts'
+import echarts from 'echarts/lib/echarts'
+import 'echarts/lib/chart/map'
 
-import { fetchData, getAreaDataUrl } from '../lib/tools'
+import { MapSeriesDataObject } from '../types/index'
+import { fetchData, getAreaDataUrl, setMapSeriesItemColor } from '../lib/tools'
 
 import './Map.css'
 
@@ -25,11 +27,17 @@ export default class Map extends React.Component<MapProps, MapState> implements 
 
     this.setupChinaMap = this.setupChinaMap.bind(this)
     this.renderMap = this.renderMap.bind(this)
+    this.resizeMap = this.resizeMap.bind(this)
   }
 
   componentDidMount() {
     this.chart = echarts.init(document.getElementById('map-content') as HTMLDivElement)
     this.setupChinaMap()
+    window.addEventListener('resize', this.resizeMap)
+  }
+
+  componentWillUnmount () {
+    window.removeEventListener('resize', this.resizeMap)
   }
 
   render() {
@@ -40,8 +48,6 @@ export default class Map extends React.Component<MapProps, MapState> implements 
 
   private setupChinaMap() {
     fetchData(getAreaDataUrl(this.props.area)).then(data => {
-      console.log(data)
-
       const features = data.features && data.features.map((feature: any) => {
         return {name: feature.properties.name}
       })
@@ -55,9 +61,10 @@ export default class Map extends React.Component<MapProps, MapState> implements 
     echarts.registerMap(name, data)
   }
 
-  private renderMap(name: string, data: object[]) {
-    console.log(this.chart)
-    this.chart && this.chart.setOption({
+  private renderMap(name: string, data: MapSeriesDataObject[]) {
+    data = setMapSeriesItemColor(data)
+
+    this.chart?.setOption({
       tooltip: {
         trigger: 'item',
         formatter: '{b}'
@@ -91,28 +98,23 @@ export default class Map extends React.Component<MapProps, MapState> implements 
           normal: {
             show: true,
             textStyle: {
-              color: '#999',
+              color: '#666',
               fontSize: 13
             }
           },
           emphasis: {
             show: true,
             textStyle: {
-              color: '#fff',
+              color: '#969696',
               fontSize: 13
             }
           }
-        },
-        itemStyle: {
-          normal: {
-            areaColor: '#323c48',
-            borderColor: 'dodgerblue'
-          },
-          emphasis: {
-            areaColor: 'darkorange'
-          }
-        },
+        }
       }]
     })
+  }
+
+  private resizeMap() {
+    this.chart?.resize()
   }
 }
