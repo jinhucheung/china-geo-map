@@ -1,15 +1,16 @@
 import settings from '../config/settings'
-import { MapSeriesDataObject } from '../types/index'
+import { MapSeriesDataObject, Area } from '../types/'
 import clone from 'rfdc'
 
-export function setDocTitle({subtitles, title = settings.site_title} : {subtitles?: string|string[]|undefined|null, title?: string}) {
-  if (!subtitles) {
-    document.title = title
-  } else if (subtitles instanceof String) {
-    document.title = `${subtitles} - ${title}`
-  } else if (subtitles instanceof Array) {
-    document.title = `${subtitles.join(' - ')} - ${title}`
-  }
+export function setDocTitle({area, title = settings.site_title} : {area?: Area, title?: string}) {
+  if (!area) return document.title = title
+
+  const parsed_area = parseArea(area)
+  const cloned_area_names = clone()(parsed_area.area_names)
+
+  cloned_area_names.shift()
+  cloned_area_names.push(title)
+  document.title = cloned_area_names.join(' - ')
 }
 
 export async function fetchData(url: string, option?: object) {
@@ -17,23 +18,24 @@ export async function fetchData(url: string, option?: object) {
   return await response.json()
 }
 
-export function parseArea(area: string[]) : {country: string, province: string|undefined, city: string|undefined, current_level: string, current_value: string} {
-  const [country, province, city] = area
+export function parseArea(area: Area) : {deep_area: any, area_values: (string|undefined)[], area_names: (string|undefined)[]} {
+  const [deep_area_value, deep_area_level] = area.city ? [area.city, 'city'] : (area.province ? [area.province, 'province'] : [area.country, 'country'])
 
   return {
-    country: country,
-    province: province,
-    city: city,
-    current_level: city ? 'city' : (province ? 'province' : 'country'),
-    current_value: city ? city : (province ? province : country),
+    deep_area: {
+      ...deep_area_value,
+      level: deep_area_level
+    },
+    area_values: [area.country?.value, area.province?.value, area.city?.value].filter(x => x),
+    area_names: [area.country?.name, area.province?.name, area.city?.name].filter(x => x)
   }
 }
 
-export function getAreaDataUrl(area: string[]) : string {
+export function getAreaDataUrl(area: Area) : string {
   let path = null
   const parsed_area = parseArea(area)
 
-  switch(parsed_area.current_level) {
+  switch(parsed_area.deep_area.level) {
     case 'province':
       path = 'provinces'
       break
@@ -41,7 +43,7 @@ export function getAreaDataUrl(area: string[]) : string {
       path = 'cities'
       break
     default:
-      path = `${parsed_area.current_value||'china'}.json`
+      path = `${parsed_area.deep_area.value||'china'}.json`
   }
 
   return `${window.location}/data/map/${path}`
@@ -65,8 +67,6 @@ export function setMapSeriesItemColor(data: MapSeriesDataObject[]) : MapSeriesDa
     item.itemStyle = {
       color: MapColors[colorIndex]
     }
-
-    console.log(item.name + '  ' + MapColors[colorIndex])
   })
 
   return cloned

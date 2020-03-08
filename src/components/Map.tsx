@@ -1,8 +1,9 @@
 import React from 'react'
 import echarts from 'echarts/lib/echarts'
 import 'echarts/lib/chart/map'
+import 'echarts/lib/component/tooltip'
 
-import { MapSeriesDataObject } from '../types/index'
+import { MapSeriesDataObject, Area } from '../types'
 import { fetchData, getAreaDataUrl, setMapSeriesItemColor } from '../lib/tools'
 
 import './Map.css'
@@ -12,7 +13,7 @@ interface MapInterface {
 }
 
 interface MapProps {
-  area: string[]
+  area: Area
 }
 
 interface MapState {}

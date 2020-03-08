@@ -4,12 +4,14 @@ import settings from '../config/settings'
 
 import Map from '../components/Map'
 
+import { Area } from '../types'
+
 import './App.css'
 
 interface AppProps {}
 
 interface AppState {
-  area: string[]
+  area: Area
 }
 
 export default class App extends React.Component<AppProps, AppState> {
@@ -17,12 +19,14 @@ export default class App extends React.Component<AppProps, AppState> {
     super(props)
 
     this.state = {
-      area: ['china']
+      area: {
+        country: { name: '中国', value: 'china' }
+      }
     }
   }
 
   render () {
-    setDocTitle({subtitles: this.state.area})
+    setDocTitle({area: this.state.area})
 
     return (
       <div className="app">
