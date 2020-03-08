@@ -3,8 +3,8 @@ import echarts from 'echarts/lib/echarts'
 import 'echarts/lib/chart/map'
 import 'echarts/lib/component/tooltip'
 
-import { MapSeriesDataObject, Area } from '../types'
-import { fetchData, getAreaDataUrl, setMapSeriesItemColor } from '../lib/tools'
+import { Area } from '../types'
+import { parseArea, extractMapSeries } from '../lib/tools'
 
 import './Map.css'
 
@@ -13,7 +13,9 @@ interface MapInterface {
 }
 
 interface MapProps {
-  area: Area
+  area: Area,
+  data?: object,
+  updateArea: Function
 }
 
 interface MapState {}
@@ -26,15 +28,14 @@ export default class Map extends React.Component<MapProps, MapState> implements 
 
     this.chart = null
 
-    this.setupChinaMap = this.setupChinaMap.bind(this)
     this.renderMap = this.renderMap.bind(this)
     this.resizeMap = this.resizeMap.bind(this)
   }
 
   componentDidMount() {
     this.chart = echarts.init(document.getElementById('map-content') as HTMLDivElement)
-    this.setupChinaMap()
     window.addEventListener('resize', this.resizeMap)
+    this.chart.on('click', this.props.updateArea)
   }
 
   componentWillUnmount () {
@@ -47,24 +48,19 @@ export default class Map extends React.Component<MapProps, MapState> implements 
     )
   }
 
-  private setupChinaMap() {
-    fetchData(getAreaDataUrl(this.props.area)).then(data => {
-      const features = data.features && data.features.map((feature: any) => {
-        return {name: feature.properties.name}
-      })
-
-      this.registerMap('china', data)
-      this.renderMap('china', features)
-    })
+  componentDidUpdate (prevProps: MapProps) {
+    if ((prevProps.area !== this.props.area || prevProps.data !== this.props.data) && this.props.area && this.props.data) {
+      const area_ident = parseArea(this.props.area).area_values.join('-')
+      this.registerMap(area_ident, this.props.data)
+      this.renderMap(area_ident, this.props.data)
+    }
   }
 
   private registerMap(name: string, data: object) {
     echarts.registerMap(name, data)
   }
 
-  private renderMap(name: string, data: MapSeriesDataObject[]) {
-    data = setMapSeriesItemColor(data)
-
+  private renderMap(name: string, data: {features?: object[]}) {
     this.chart?.setOption({
       tooltip: {
         trigger: 'item',
@@ -93,8 +89,8 @@ export default class Map extends React.Component<MapProps, MapState> implements 
         name: name,
         type: 'map',
         roam: false,
-        map: 'china',
-        data: data,
+        map: name,
+        data: extractMapSeries(data),
         label: {
           normal: {
             show: true,

@@ -1,4 +1,5 @@
 import settings from '../config/settings'
+import { mapColors, provinceMaps } from './variables'
 import { MapSeriesDataObject, Area } from '../types/'
 import clone from 'rfdc'
 
@@ -37,37 +38,30 @@ export function getAreaDataUrl(area: Area) : string {
 
   switch(parsed_area.deep_area.level) {
     case 'province':
-      path = 'provinces'
+      path = `provinces/${provinceMaps[parsed_area.deep_area.name]}`
       break
     case 'city':
-      path = 'cities'
+      path = `cities/${parsed_area.deep_area.value}`
       break
     default:
-      path = `${parsed_area.deep_area.value||'china'}.json`
+      path = `${parsed_area.deep_area.value||'china'}`
   }
 
-  return `${window.location}/data/map/${path}`
+  return `${window.location}/data/map/${path}.json`
 }
 
-const MapColors = [
-  '#92779B', '#9FA9B2', '#A0C5D2', '#82B8B5', '#52A1A7',
-  '#92779B', '#9FA9B2', '#A0C5D2', '#83B8E0', '#5898CF',
-  '#8E6E9C', '#9CA6BD', '#A0BAD9', '#7BB1DD', '#4B95CD',
-  '#978F91', '#9FADB3', '#9CC0E5', '#86A8D9', '#6982C5',
-  '#737FC3', '#8BA6D8', '#9CC0E5', '#82B9C8', '#499CA4'
-]
+export function extractMapSeries(data: {features?: object[]}) : MapSeriesDataObject[] {
+  let features = clone()(data.features) || []
 
-export function setMapSeriesItemColor(data: MapSeriesDataObject[]) : MapSeriesDataObject[] {
-  let cloned = clone()(data)
+  return features.map((item: any, index: number) => {
+    const colorIndex = ((index + 2 + (index << 1)) % mapColors.length) ^ 5
 
-  cloned.forEach((item, index) => {
-    let colorIndex = ((index + 2 + (index << 1)) % MapColors.length) ^ 5
-    if (colorIndex < 0 || colorIndex >= MapColors.length) colorIndex = index % MapColors.length
-
-    item.itemStyle = {
-      color: MapColors[colorIndex]
+    return {
+      name: item.properties.name,
+      value: item.id,
+      itemStyle: {
+        color: mapColors[colorIndex] || mapColors[index % mapColors.length]
+      }
     }
   })
-
-  return cloned
 }

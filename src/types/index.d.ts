@@ -1,6 +1,6 @@
 export interface MapSeriesDataObject {
   name: string,
-  value?: any,
+  value?: string,
   itemStyle?: {
     color?: string
   }
