@@ -2,7 +2,7 @@
   "name": "china-geo-map",
   "version": "0.1.0",
   "private": false,
-  "homepage": "https://github.com/jinhucheung/china-geo-map",
+  "homepage": "./",
   "license": "MIT",
   "author": "jimcheung",
   "dependencies": {

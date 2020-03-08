@@ -20,6 +20,6 @@
     "jsx": "react"
   },
   "include": [
-    "src", "public/vendor"
+    "src"
   ]
 }
