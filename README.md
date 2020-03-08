@@ -4,7 +4,7 @@ China geo map search
 
 ## Example
 
-![example](https://user-images.githubusercontent.com/19590194/76161917-d7a06300-6172-11ea-8eb7-9ea3a695f42e.png)
+![example](https://user-images.githubusercontent.com/19590194/76161979-8e9cde80-6173-11ea-848e-629015f5a420.png)
 
 ## Demo
 
