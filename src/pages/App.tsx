@@ -1,5 +1,7 @@
 import React from 'react'
+import clone from 'rfdc'
 import Map from '../components/Map'
+import Toolbar from '../components/Toolbar'
 
 import settings from '../config/settings'
 import { setDocTitle, getAreaDataUrl, fetchData } from '../lib/tools'
@@ -11,7 +13,7 @@ interface AppProps {}
 
 interface AppState {
   area: Area
-  geoData?: object
+  geoData?: object,
 }
 
 export default class App extends React.Component<AppProps, AppState> {
@@ -28,6 +30,7 @@ export default class App extends React.Component<AppProps, AppState> {
 
     this.fetchGeoData = this.fetchGeoData.bind(this)
     this.updateArea = this.updateArea.bind(this)
+    this.zoomMap = this.zoomMap.bind(this)
   }
 
   componentDidMount () {
@@ -46,7 +49,9 @@ export default class App extends React.Component<AppProps, AppState> {
           <div className="app-main-content-container"></div>
           <div className="app-main-map-container"><Map area={this.state.area} data={this.state.geoData} updateArea={this.updateArea} /></div>
         </div>
-        <div className="app-footer"></div>
+        <div className="app-footer">
+          <Toolbar showZoomOut={!!this.state.area.city || !!this.state.area.province} zoomMap={this.zoomMap} />
+        </div>
       </div>
     )
   }
@@ -64,6 +69,8 @@ export default class App extends React.Component<AppProps, AppState> {
   private updateArea (params: any) {
     const currentArea = this.state.area
     let nextArea: Area = {}
+
+    if (!params.data) return
 
     let [country, province, city] = (params.seriesName || '').split('-')
 
@@ -92,5 +99,22 @@ export default class App extends React.Component<AppProps, AppState> {
     }
 
     this.fetchGeoData(nextArea)
+  }
+
+  private zoomMap (action: string) {
+    switch (action) {
+      case 'zoom_out':
+        let cloned = clone()(this.state.area)
+        if (cloned.city) {
+          delete cloned.city
+        } else if (cloned.province) {
+          delete cloned.province
+        }
+        this.fetchGeoData(cloned)
+        break
+      case 'zoom_default':
+        this.fetchGeoData(this.defaultArea)
+        break
+    }
   }
 }

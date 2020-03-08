@@ -1,0 +1,20 @@
+.app-toolbar {
+  position: fixed;
+  right: 5em;
+  bottom: 8em;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-toolbar-item {
+  cursor: pointer;
+  font-size: 1.7em;
+  line-height: 1.8em;
+  color: #000000;
+}
+
+.app-toolbar-item:hover {
+  opacity: .75;
+  color: #A0A0A0;
+}
