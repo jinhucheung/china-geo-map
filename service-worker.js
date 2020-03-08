@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/jinhucheung/china-geo-map/precache-manifest.d97e6f044bb2c672afce5c4229283176.js"
+  "/jinhucheung/china-geo-map/precache-manifest.dc97620bc88a8483038807bcd44ee160.js"
 );
 
 self.addEventListener('message', (event) => {
