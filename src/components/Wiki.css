@@ -1,0 +1,26 @@
+.app-wiki {
+
+}
+
+.app-wiki-title {
+  font-size: 1.5em;
+  font-weight: 600;
+  margin-bottom: .5em;
+}
+
+.app-wiki-desc {
+  margin-bottom: .5em;
+}
+
+.app-wiki-item-name, .app-wiki-tags-name {
+  font-weight: 550;
+  margin-right: .4em;
+}
+
+.app-wiki-item + .app-wiki-item {
+  margin-top: .3em;
+}
+
+.app-wiki-items {
+  margin-bottom: .5em;
+}

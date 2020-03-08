@@ -10,10 +10,17 @@
 
 .app-main {
   width: 100%;
-
 }
 
 .app-main-map-container {
   margin: 0 auto;
   width: 100%;
+}
+
+.app-main-wiki-container {
+  margin-left: 3em;
+  float: left;
+  max-width: 25em;
+  position: fixed;
+  z-index: 2;
 }

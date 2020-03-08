@@ -2,10 +2,11 @@ import React from 'react'
 import clone from 'rfdc'
 import Map from '../components/Map'
 import Toolbar from '../components/Toolbar'
+import Wiki from '../components/Wiki'
 
 import settings from '../config/settings'
 import { setDocTitle, getAreaDataUrl, fetchData } from '../lib/tools'
-import { Area } from '../types'
+import { Area, WikiData } from '../types'
 
 import './App.css'
 
@@ -14,6 +15,7 @@ interface AppProps {}
 interface AppState {
   area: Area
   geoData?: object,
+  wikiData?: WikiData|null
 }
 
 export default class App extends React.Component<AppProps, AppState> {
@@ -28,13 +30,13 @@ export default class App extends React.Component<AppProps, AppState> {
       area: this.defaultArea
     }
 
-    this.fetchGeoData = this.fetchGeoData.bind(this)
+    this.fetchAreaData = this.fetchAreaData.bind(this)
     this.updateArea = this.updateArea.bind(this)
     this.zoomMap = this.zoomMap.bind(this)
   }
 
   componentDidMount () {
-    this.fetchGeoData(this.state.area)
+    this.fetchAreaData(this.state.area)
   }
 
   render () {
@@ -46,7 +48,7 @@ export default class App extends React.Component<AppProps, AppState> {
           <div className="app-header-title">{settings.site_title}</div>
         </div>
         <div className="app-main">
-          <div className="app-main-content-container"></div>
+          {this.state.wikiData && <div className="app-main-wiki-container"><Wiki data={this.state.wikiData} area={this.state.area} /></div>}
           <div className="app-main-map-container"><Map area={this.state.area} data={this.state.geoData} updateArea={this.updateArea} /></div>
         </div>
         <div className="app-footer">
@@ -92,13 +94,18 @@ export default class App extends React.Component<AppProps, AppState> {
         province: currentArea.province,
         city: data
       }
+    } else if (data.name) {
+      return this.fetchWikiData({
+        ...this.state.area,
+        county: data
+      })
     } else {
       nextArea = {
         ...this.defaultArea
       }
     }
 
-    this.fetchGeoData(nextArea)
+    this.fetchAreaData(nextArea)
   }
 
   private zoomMap (action: string) {
@@ -110,11 +117,33 @@ export default class App extends React.Component<AppProps, AppState> {
         } else if (cloned.province) {
           delete cloned.province
         }
-        this.fetchGeoData(cloned)
+        this.fetchAreaData(cloned)
         break
       case 'zoom_default':
-        this.fetchGeoData(this.defaultArea)
+        this.fetchAreaData(this.defaultArea)
         break
     }
+  }
+
+  private fetchWikiData (area: Area) {
+    const query = area.county ? area.county.name : (area.city ? area.city.name : (area.province ? area.province.name : area.country?.name))
+
+    if (!query) return
+
+    const query_url = settings.search_url.replace('${query}', encodeURIComponent(query))
+
+    fetchData(query_url)
+      .then(data => {
+        if (data.message === 'success') {
+          this.setState({wikiData: data.data})
+        } else {
+          this.setState({wikiData: null})
+        }
+      })
+  }
+
+  private fetchAreaData (area: Area) {
+    this.fetchGeoData(area)
+    this.fetchWikiData(area)
   }
 }

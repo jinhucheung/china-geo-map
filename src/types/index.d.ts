@@ -18,5 +18,16 @@ export interface Area {
   city?: {
     name: string,
     value: string
+  },
+  county?: {
+    name: string,
+    value?: string
   }
+}
+
+export interface WikiData {
+  entity: string,
+  desc: string,
+  avp: string[][],
+  tag: string[]
 }

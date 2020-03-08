@@ -65,3 +65,15 @@ export function extractMapSeries(data: {features?: object[]}) : MapSeriesDataObj
     }
   })
 }
+
+export function mergeWikiAvp (avp: string[][]) : {[index: string]: string[]} {
+  let result : {[index: string]: string[]} = {}
+
+  avp.forEach(item => {
+    const key = item[0]
+    result[key] = result[key] || []
+    result[key].push(item[1])
+  })
+
+  return result
+}
