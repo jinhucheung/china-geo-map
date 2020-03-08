@@ -126,12 +126,10 @@ export default class App extends React.Component<AppProps, AppState> {
   }
 
   private fetchWikiData (area: Area) {
-    let query = area.county ? area.county.name : (area.city ? area.city.name : (area.province ? area.province.name : area.country?.name))
+    // Fixme: ownthink 市级搜索兼容
+    let query = area.county?.name ? area.county.name : (area.city?.name ? area.city.name.replace(/市$/, '') : (area.province?.name ? area.province.name : area.country?.name))
 
     if (!query) return
-
-    // Fixme: ownthink 市级搜索兼容
-    if (!area.county && !area.city && area.province) query = query.replace(/市$/, '')
 
     const query_url = settings.search_url.replace('${query}', encodeURIComponent(query))
 
