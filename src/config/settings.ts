@@ -15,7 +15,7 @@ const settings : {
     default: '默认地图'
   },
   tag_name: '标签',
-  search_url: 'https://api.ownthink.com/kg/knowledge?entity=${query}'
+  search_url: 'https://api.ownthink.com/kg/knowledge?entity=__query__'
 }
 
 export default settings

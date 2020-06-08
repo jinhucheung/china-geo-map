@@ -131,7 +131,7 @@ export default class App extends React.Component<AppProps, AppState> {
 
     if (!query) return
 
-    const query_url = settings.search_url.replace('${query}', encodeURIComponent(query))
+    const query_url = settings.search_url.replace('__query__', encodeURIComponent(query))
 
     fetchData(query_url)
       .then(data => {
